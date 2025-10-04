@@ -2,7 +2,7 @@
   <img src="logo.png" alt="To-Do App Logo" width="120" height="120" />
 </p>
 
-<h1 align="center">🧠 To-Do App</h1>
+<h1 align="center"> To-Do App</h1>
 
 <p align="center">
   <strong>A modern, responsive, and premium To-Do web app</strong>  
