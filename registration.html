@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' }</script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-500">
+  <!-- Navbar -->
+  <div id="navbar-container"></div>
+
+  <!-- Page -->
+  <main class="flex justify-center items-center p-10">
+    <div class="w-full max-w-md bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow p-8">
+      <h2 class="text-2xl font-bold text-center mb-6">📝 Create Account</h2>
+
+      <form id="registerForm" class="flex flex-col gap-4">
+        <input id="username" type="text" placeholder="Choose a username"
+          class="p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 outline-none" />
+        <input id="password" type="password" placeholder="Choose a password"
+          class="p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 outline-none" />
+
+        <button class="p-3 bg-indigo-600 hover:bg-indigo-700 dark:bg-violet-600 dark:hover:bg-violet-700 text-white rounded-lg font-semibold">
+          Register
+        </button>
+
+        <p class="text-center text-sm mt-2 text-gray-600 dark:text-gray-300">
+          Already have an account?
+          <a href="login.html" class="text-indigo-600 dark:text-violet-400 hover:underline">Login</a>
+        </p>
+      </form>
+    </div>
+  </main>
+
+  <script src="navbar.js"></script>
+  <script>
+    document.getElementById("registerForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const user = document.getElementById("username").value.trim();
+      const pass = document.getElementById("password").value.trim();
+
+      if (!user || !pass) return alert("Please fill in all fields.");
+
+      localStorage.setItem("account", JSON.stringify({ username: user, password: pass }));
+      alert("✅ Account created! You can now log in.");
+      window.location.href = "login.html";
+    });
+  </script>
+</body>
+</html>

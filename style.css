@@ -1,0 +1,9 @@
+.active-filter {
+  background: linear-gradient(to right, #6366f1, #38bdf8);
+  color: white !important;
+  border: none !important;
+}
+.nav-link { color:#4b5563; transition:.2s; }
+.dark .nav-link { color:#cbd5e1; }
+.nav-link:hover { color:#6366f1; }
+.dark .nav-link:hover { color:#a78bfa; }

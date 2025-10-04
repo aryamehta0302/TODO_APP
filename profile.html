@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' };</script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="min-h-screen flex flex-col bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-500 font-sans">
+
+  <!-- Navbar -->
+  <div id="navbar-container"></div>
+
+  <!-- Main -->
+  <main class="flex-1 flex justify-center items-start p-6">
+    <div class="w-full max-w-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow p-6">
+      
+      <!-- Profile Header -->
+      <div class="flex flex-col items-center mb-6">
+        <img id="profilePhoto" src="https://via.placeholder.com/100"
+             class="w-24 h-24 rounded-full border border-gray-300 dark:border-gray-600 object-cover shadow mb-3" alt="Profile Photo" />
+        <h2 id="displayName" class="text-2xl font-bold text-center">Your Name</h2>
+        <p id="displayBio" class="text-sm text-gray-600 dark:text-gray-300 text-center mt-1 italic">Your bio here...</p>
+      </div>
+
+      <!-- Profile Details -->
+      <div id="viewMode" class="space-y-3">
+        <p><strong>👤 Gender:</strong> <span id="displayGender" class="text-gray-700 dark:text-gray-300">—</span></p>
+        <p><strong>🎯 Interests:</strong> <span id="displayInterests" class="text-gray-700 dark:text-gray-300">—</span></p>
+      </div>
+
+      <!-- Edit Form (hidden by default) -->
+      <form id="editForm" class="hidden flex flex-col gap-4 mt-4">
+        <input id="nameInput" type="text" placeholder="Name"
+          class="p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 outline-none" />
+        
+        <textarea id="bioInput" placeholder="Short Bio..."
+          class="p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
+
+        <select id="genderInput"
+          class="p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 outline-none">
+          <option value="">Select Gender</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>Other</option>
+        </select>
+
+        <input id="interestsInput" type="text" placeholder="e.g. Coding, Music, Fitness"
+          class="p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 focus:ring-2 focus:ring-indigo-500 outline-none" />
+
+        <label class="text-sm font-medium text-gray-600 dark:text-gray-300">Profile Photo:</label>
+        <input type="file" id="photoInput" accept="image/*" class="text-sm" />
+
+        <div class="flex justify-between mt-2">
+          <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold">💾 Save</button>
+          <button type="button" id="cancelEdit" class="px-4 py-2 bg-gray-400 hover:bg-gray-500 text-white rounded-lg font-semibold">Cancel</button>
+        </div>
+      </form>
+
+      <!-- Actions -->
+      <div class="mt-6 flex justify-between">
+        <button id="editProfile" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-medium">Edit Profile</button>
+        <button id="deleteAccount" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm font-medium">Delete Account</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <div id="footer-container"></div>
+
+  <script src="navbar.js"></script>
+  <script src="footer.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const profile = JSON.parse(localStorage.getItem("userProfile")) || {};
+
+      // Display Elements
+      const displayName = document.getElementById("displayName");
+      const displayBio = document.getElementById("displayBio");
+      const displayGender = document.getElementById("displayGender");
+      const displayInterests = document.getElementById("displayInterests");
+      const profilePhoto = document.getElementById("profilePhoto");
+
+      // Form Elements
+      const editForm = document.getElementById("editForm");
+      const nameInput = document.getElementById("nameInput");
+      const bioInput = document.getElementById("bioInput");
+      const genderInput = document.getElementById("genderInput");
+      const interestsInput = document.getElementById("interestsInput");
+      const photoInput = document.getElementById("photoInput");
+      const cancelEdit = document.getElementById("cancelEdit");
+
+      // Buttons
+      const editBtn = document.getElementById("editProfile");
+      const deleteBtn = document.getElementById("deleteAccount");
+
+      // Populate display
+      const loadProfile = () => {
+        displayName.textContent = profile.name || "Your Name";
+        displayBio.textContent = profile.bio || "Your bio here...";
+        displayGender.textContent = profile.gender || "—";
+        displayInterests.textContent = profile.interests || "—";
+        profilePhoto.src = profile.photo || "https://via.placeholder.com/100";
+      };
+      loadProfile();
+
+      // Switch to edit mode
+      editBtn.addEventListener("click", () => {
+        editForm.classList.remove("hidden");
+        document.getElementById("viewMode").classList.add("hidden");
+        editBtn.classList.add("hidden");
+
+        // Fill form
+        nameInput.value = profile.name || "";
+        bioInput.value = profile.bio || "";
+        genderInput.value = profile.gender || "";
+        interestsInput.value = profile.interests || "";
+      });
+
+      // Cancel edit
+      cancelEdit.addEventListener("click", () => {
+        editForm.classList.add("hidden");
+        document.getElementById("viewMode").classList.remove("hidden");
+        editBtn.classList.remove("hidden");
+      });
+
+      // Preview photo
+      photoInput.addEventListener("change", e => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = e => profilePhoto.src = e.target.result;
+          reader.readAsDataURL(file);
+        }
+      });
+
+      // Save profile
+      editForm.addEventListener("submit", e => {
+        e.preventDefault();
+        profile.name = nameInput.value.trim() || "Your Name";
+        profile.bio = bioInput.value.trim();
+        profile.gender = genderInput.value;
+        profile.interests = interestsInput.value.trim();
+        profile.photo = profilePhoto.src;
+
+        localStorage.setItem("userProfile", JSON.stringify(profile));
+        alert("✅ Profile updated!");
+
+        editForm.classList.add("hidden");
+        document.getElementById("viewMode").classList.remove("hidden");
+        editBtn.classList.remove("hidden");
+        loadProfile();
+      });
+
+      // Delete account
+      deleteBtn.addEventListener("click", () => {
+        if (confirm("Are you sure you want to delete your account?")) {
+          localStorage.removeItem("userProfile");
+          localStorage.setItem("loggedIn", "false");
+          alert("❌ Account deleted!");
+          window.location.href = "index.html";
+        }
+      });
+    });
+  </script>
+</body>
+</html>
