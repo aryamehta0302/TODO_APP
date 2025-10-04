@@ -152,5 +152,5 @@ This project is licensed under the **MIT License**.
 ---
 
 <p align="center">
-  Made with 💙 by <strong>Your Name</strong>  
+  Made with 💙 by <strong>ARYA</strong>  
 </p>
